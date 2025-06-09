@@ -14,7 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createMovie } from "@/actions/movies";
+import { getAllYears, years } from "@/lib/utils";
+
 export function AddMovieForm({ onClose }) {
+  const years = getAllYears();
   const [isSubmitting, setIsSubmitting] = useState(false);
   //Controlled states
   const [selectedYear, setSelectedYear] = useState("");
@@ -97,10 +100,11 @@ export function AddMovieForm({ onClose }) {
               <SelectValue placeholder="Select Year" />
             </SelectTrigger>
             <SelectContent>
-              {/* <SelectItem value={null}>Please select year</SelectItem> */}
-              <SelectItem value="2025">2025</SelectItem>
-              <SelectItem value="2024">2024</SelectItem>
-              <SelectItem value="2023">2023</SelectItem>
+              {years.map((year) => (
+                <SelectItem key={year} value={year}>
+                  {year}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
