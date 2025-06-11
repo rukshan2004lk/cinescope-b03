@@ -50,7 +50,7 @@ export const createMovie = async (movie) => {
   }
 };
 
-// create movie action
+// update movie action
 
 export const updateMovie = async (movieId, movieDoc) => {
   try {
@@ -72,6 +72,28 @@ export const updateMovie = async (movieId, movieDoc) => {
       return undefined;
     }
   } catch {
-    console.log("Mongodb insert failed!");
+    console.log("Mongodb update failed!");
+  }
+};
+
+// delete movie action
+
+export const deleteMovie = async (movieId) => {
+  try {
+    const result = await db
+      .collection("movies_n")
+      .deleteOne({ _id: ObjectId.createFromHexString(movieId) });
+
+    if (result.acknowledged) {
+      console.log(`A movie was deleted with the _id: ${result.insertedId}`);
+      return {
+        success: true,
+        message: "Movie deleted successfully!",
+      };
+    } else {
+      return undefined;
+    }
+  } catch {
+    console.log("Mongodb delete failed!");
   }
 };

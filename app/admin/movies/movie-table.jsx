@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
@@ -12,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -23,17 +24,34 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import UpdateMovieDialog from "./update-movie-dialog";
-
+import DeleteMovieDialog from "./delete-movie-dialog";
+import { deleteMovie } from "@/actions/movies";
 //import { MOVIES } from "@/lib/data";
 
-export default function MovieTable({movies}) {
+export default function MovieTable({ movies }) {
+  const router = useRouter();
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const toggleUpdateDialog = (open)=>{
+  const toggleUpdateDialog = (open) => {
     // Using requestANimationFrame to ensure the dialog opens after the state update
 
     requestAnimationFrame(() => setShowUpdateDialog(open || !showUpdateDialog));
+  };
+
+  const toggleDeleteDialog = (open) => {
+    // Using requestAnimationFrame to ensure the dialog opens after the state update
+    requestAnimationFrame(() => setShowDeleteDialog(open || !showDeleteDialog));
+  };
+
+  const handleDeleteMovie = async (movieId) => {
+    const resp = await deleteMovie(movieId);
+    if (resp?.success) {
+      setSelectedMovie(null);
+      toggleDeleteDialog(false);
+      router.refresh();
+    }
   };
 
   const getStatusClass = (status) => {
@@ -91,7 +109,9 @@ export default function MovieTable({movies}) {
                   ))}
                 </div>
               </TableCell>
-              <TableCell className="text-center">{Number(movie?.imdb?.rating).toFixed(1)}</TableCell>
+              <TableCell className="text-center">
+                {Number(movie?.imdb?.rating).toFixed(1)}
+              </TableCell>
               <TableCell className="capitalize">
                 <Badge className={getStatusClass(movie.status)}>
                   {movie.status}
@@ -100,20 +120,31 @@ export default function MovieTable({movies}) {
               <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0"><span className="sr-only">Open Menu</span>
-                    <MoreHorizontal className="h-4 w-4"></MoreHorizontal>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                      <span className="sr-only">Open Menu</span>
+                      <MoreHorizontal className="h-4 w-4"></MoreHorizontal>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Movie Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() =>{
-                      setSelectedMovie(movie);
-                      toggleUpdateDialog(true);
-                    }}>Edit</DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive">
-                        Delete
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedMovie(movie);
+                        toggleUpdateDialog(true);
+                      }}
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        setSelectedMovie(movie);
+                        toggleDeleteDialog(true);
+                      }}
+                    >
+                      Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -122,8 +153,17 @@ export default function MovieTable({movies}) {
           ))}
         </TableBody>
       </Table>
-      <UpdateMovieDialog open={showUpdateDialog} onOpenChange={setShowUpdateDialog}
-      movie={selectedMovie}
+      <UpdateMovieDialog
+        open={showUpdateDialog}
+        onOpenChange={toggleUpdateDialog}
+        movie={selectedMovie}
+      />
+      <DeleteMovieDialog
+        open={showDeleteDialog}
+        onOpenChange={toggleDeleteDialog}
+        onConfirm={handleDeleteMovie}
+        movie={selectedMovie}
+        isLoading={false}
       />
     </div>
   );
