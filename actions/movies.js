@@ -1,5 +1,6 @@
 "use server";
 import { db } from "@/lib/db";
+import { ObjectId } from "mongodb";
 // get all movies action
 export const getMovies = async () => {
   try {
@@ -40,6 +41,32 @@ export const createMovie = async (movie) => {
       return {
         success: true,
         message: "Movie created successfully!",
+      };
+    } else {
+      return undefined;
+    }
+  } catch {
+    console.log("Mongodb insert failed!");
+  }
+};
+
+// create movie action
+
+export const updateMovie = async (movieId, movieDoc) => {
+  try {
+    const result = await db
+      .collection("movies_n")
+      .updateOne(
+        { _id: ObjectId.createFromHexString(movieId) },
+        { $set: movieDoc },
+        { upsert: true }
+      );
+
+    if (result.acknowledged) {
+      console.log(`A movie was inserted with the _id: ${result.insertedId}`);
+      return {
+        success: true,
+        message: "Movie updated successfully!",
       };
     } else {
       return undefined;
