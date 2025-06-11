@@ -119,7 +119,7 @@ export default function AdminSidebar() {
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Profile">
-                  <Link href="/admin/profile">
+                  <Link href="/">
                     <Film className="h-4 w-4" />
                     <span>Public Site</span>
                   </Link>

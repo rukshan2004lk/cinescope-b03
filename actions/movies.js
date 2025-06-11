@@ -30,6 +30,29 @@ export const getMovies = async () => {
   }
 };
 
+
+// get all movies action
+export const getMovieById = async (movieId) => {
+  try {
+    const result = await db
+      .collection("movies")
+      .findOne({ _id: ObjectId.createFromHexString(movieId) });
+
+    if (result && Object.keys(result).length > 0) {
+      console.log(`A movie found with the _id: ${result._id}`);
+      return {
+        success: true,
+        message: "Movie fetched successfully!",
+        data: result,
+      };
+    } else {
+      return undefined;
+    }
+  } catch {
+    console.log("Mongodb fetch failed!");
+  }
+};
+
 // create movie action
 
 export const createMovie = async (movie) => {
