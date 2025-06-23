@@ -2,6 +2,8 @@ import HeaderNav from "@/components/header-nav"; //alias import
 import FeaturedMovies from "@/components/home/featured-movies";
 import HeroBanner from "@/components/home/hero-banner";
 
+
+
 //SSR - Server Side Rendered - Server Component
 export default function Home() {
   return (

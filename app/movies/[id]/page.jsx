@@ -14,11 +14,13 @@ export async function generateMetadata(props) {
       "Find your favorite movie ratings and recommendations ",
   };
 }
+
+export const revalidate = 60; 
 //server component
 export default async function MovieDetailsPage(props) {
   const { id } = props.params;
   //Simulate a delay for demonstrations 2 sec
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  //await new Promise((resolve) => setTimeout(resolve, 2000));
   const movie = await getMovieById(id);
 
   //throw new Error("Movie not found");
