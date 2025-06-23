@@ -2,7 +2,9 @@ import { Button } from "@/components/ui/button";
  import { Play, Film } from "lucide-react";
 
 //Hero Banner Section
-export default function HeroBanner() {
+export default function HeroBanner({
+  
+}) {
   return (
     <section id="overview" className="relative overflow-hidden min-h-[70vh]">
       <div className="absolute inset-0 z-0">

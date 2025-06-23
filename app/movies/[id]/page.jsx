@@ -1,10 +1,21 @@
 import { getMovieById } from "@/actions/movies";
+
+export async function generateMetadata(props) {
+  const {id} = await props.params;
+  const movie = await getMovieById(id);
+
+  return{
+    title: movie?.data?.title ? `CineScope | ${movie.data.title}` : "CineScope | Movie Details",
+    description: movie?.data?.plot ?? "Find your favorite movie ratings and recommendations "
+  }
+  
+}
 //server component
 export default async function MovieDetailsPage(props) {
   const { id } = props.params;
   const movie = await getMovieById(id);
 
-  console.log("Movie", movie);
+  //console.log("Movie", movie);
   return (
     <main className="flex flex-col justify-center py-16 px-4 mx-auto">
       <h1 className="font-bold text-center text-xl text-amber-600">

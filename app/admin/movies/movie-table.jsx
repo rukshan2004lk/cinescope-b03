@@ -26,7 +26,7 @@ import {
 import UpdateMovieDialog from "./update-movie-dialog";
 import DeleteMovieDialog from "./delete-movie-dialog";
 import { deleteMovie } from "@/actions/movies";
-//import { MOVIES } from "@/lib/data";
+// import { MOVIES } from "@/lib/data";
 
 export default function MovieTable({ movies }) {
   const router = useRouter();
@@ -35,8 +35,7 @@ export default function MovieTable({ movies }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const toggleUpdateDialog = (open) => {
-    // Using requestANimationFrame to ensure the dialog opens after the state update
-
+    // Using requestAnimationFrame to ensure the dialog opens after the state update
     requestAnimationFrame(() => setShowUpdateDialog(open || !showUpdateDialog));
   };
 
@@ -70,7 +69,7 @@ export default function MovieTable({ movies }) {
   return (
     <div className="rounded-md border">
       <Table>
-        <TableCaption>Admin Movies Table</TableCaption>
+        <TableCaption className="sr-only">Admin Movies Table</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[80px]">#</TableHead>
@@ -95,7 +94,6 @@ export default function MovieTable({ movies }) {
                     width={28}
                     className="h-10 w-7 rounded object-cover"
                   />
-
                   <span className="font-medium">{movie.title}</span>
                 </div>
               </TableCell>
@@ -104,7 +102,7 @@ export default function MovieTable({ movies }) {
                 <div className="flex flex-wrap gap-1">
                   {movie.genres.map((genre) => (
                     <Badge key={genre} variant="outline" className="text-xs">
-                      {genre}{" "}
+                      {genre}
                     </Badge>
                   ))}
                 </div>
@@ -122,7 +120,7 @@ export default function MovieTable({ movies }) {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                       <span className="sr-only">Open Menu</span>
-                      <MoreHorizontal className="h-4 w-4"></MoreHorizontal>
+                      <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -137,6 +135,7 @@ export default function MovieTable({ movies }) {
                     >
                       Edit
                     </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => {
@@ -153,11 +152,13 @@ export default function MovieTable({ movies }) {
           ))}
         </TableBody>
       </Table>
+
       <UpdateMovieDialog
         open={showUpdateDialog}
         onOpenChange={toggleUpdateDialog}
         movie={selectedMovie}
       />
+
       <DeleteMovieDialog
         open={showDeleteDialog}
         onOpenChange={toggleDeleteDialog}
